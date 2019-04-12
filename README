@@ -9,7 +9,23 @@ The included `canmatc` program translates CiA EDS files to C code. The
 socanmatic library provides routines for communicating with CANopen
 nodes using this generated code
 
+
+Use with SNS
+------------
+Initalize the CAN socket with:
+ip link set *can socket* up type can bitrate *baudrate*
+
+Create the ach channels with:
+ach mk *channel name*
+
+more documentation on ach here:
+http://code.golems.org/pkg/ach/manual/
+
+Start SNS with:
+sns start
+
+run the CAN402 program.
+
 See Also
 --------
 * http://www.can-cia.org/
-

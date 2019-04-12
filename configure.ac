@@ -3,7 +3,7 @@
 
 AC_PREREQ([2.65])
 AC_INIT([socanmatic], [0.0.1], [ntd@gatech.edu])
-AM_INIT_AUTOMAKE([-Wall])
+AM_INIT_AUTOMAKE([-Wall subdir-objects])
 AC_CONFIG_SRCDIR([include/socanmatic.h])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_MACRO_DIR([m4])
@@ -49,6 +49,19 @@ AC_CHECK_DECL([PRIuPTR],
 AC_SEARCH_LIBS([clock_gettime],[rt])
 AC_SEARCH_LIBS([pthread_create],[pthread])
 
+#need to set up the proper includes for SNS, while this does do that, it also makes it not configure if you don't have SNS set up.
+PKG_CHECK_MODULES([AMINO], [amino])
+AC_SUBST([AMINO_CFLAGS])
+AC_SUBST([AMINO_LIBS])
+
+PKG_CHECK_MODULES([ACH], [ach])
+AC_SUBST([ACH_CFLAGS])
+AC_SUBST([ACH_LIBS])
+
+ACH_LIBS="$ACH_LIBS -lach-experimental"
+
+CFLAGS="$CFLAGS $AMINO_CFLAGS $ACH_CFLAGS"
+
 # Look for ntcan library
 AC_CHECK_HEADER([ntcan.h], [FOUND_NTCAN=yes])
 AM_CONDITIONAL([HAVE_NTCAN], [test x$FOUND_NTCAN = xyes])
@@ -57,6 +70,8 @@ AM_CONDITIONAL([HAVE_NTCAN], [test x$FOUND_NTCAN = xyes])
 # Look for sns library
 AC_CHECK_HEADER([sns.h], [FOUND_SNS=yes])
 AM_CONDITIONAL([HAVE_SNS], [test x$FOUND_SNS = xyes])
+
+
 
 # Enable maximum warnings
 AX_CFLAGS_WARN_ALL
@@ -109,3 +124,9 @@ AM_CONDITIONAL([HAVE_MANUAL],   [test x$DB2HTML != x -o x$FOUND_MANUAL = xyes])
 
 AC_CONFIG_FILES([Makefile doc/Makefile])
 AC_OUTPUT
+
+AS_BOX([SOCANMATIC CONFIGURATION SUMMARY])
+AC_MSG_NOTICE([prefix:            $prefix])
+AC_MSG_NOTICE([C compiler:        $CC])
+AC_MSG_NOTICE([CFLAGS:            $CFLAGS])
+AC_MSG_NOTICE([SNS:		  $HAVE_SNS])
