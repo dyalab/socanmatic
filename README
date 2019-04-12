@@ -13,15 +13,19 @@ nodes using this generated code
 Use with SNS
 ------------
 Initalize the CAN socket with:
+
 ip link set *can socket* up type can bitrate *baudrate*
 
 Create the ach channels with:
+
 ach mk *channel name*
 
 more documentation on ach here:
+
 http://code.golems.org/pkg/ach/manual/
 
 Start SNS with:
+
 sns start
 
 run the CAN402 program.
