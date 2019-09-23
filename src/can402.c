@@ -416,7 +416,7 @@ static void get_msg( struct can402_cx *cx, ach_channel_t *channel,
     switch(r) {
     case ACH_TIMEOUT:
         if( sns_msg_is_expired(&cx->msg_ref->header, &cx->now) ) {
-            //SNS_LOG( LOG_NOTICE, "Reference timeout\n");
+            /* SNS_LOG( LOG_NOTICE, "Reference timeout\n"); */
             halt(cx, 1);
             break;
         }
@@ -551,6 +551,9 @@ static void process( struct can402_cx *cx ) {
             cx->drive_set.drive[i].pos_offset = cx->msg_ref->u[i];
         }
         break;
+    case SNS_MOTOR_MODE_HALT:
+	halt(cx,1);
+	break;
     default:
         SNS_LOG( LOG_ERR, "unhandled op mode in motor_ref msg: '%d'\n", cx->msg_ref->mode );
     }
